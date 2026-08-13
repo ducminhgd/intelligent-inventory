@@ -2,6 +2,18 @@
 
 ## High level
 
+![architectural design diagram](./media/architectural-design.png)
+
+1. Softare application layer:
+    1. *Frontend server-side*: the containers for Frontend, we use Server-side Rendering.
+    2. *Backend APIs*: the containers of Backend API.
+    3. *Cache*: this containers are used for cache to improve the performance of the system, we don't store the persistent data in this component. We can use Redis and configure it not to use the hard disk.
+4. Database layer:
+    1. *Source* & *Replica* are the replication of the main database, we can use PostgreSQL.
+    2. *Persistent cache* we can use Redis to store the persistent data in cache (if it is necessary). This component is optional.
+
+We use Kubernetes (or at least K3s for the non-production environments) for software application layer for high availability.
+
 ## Caching Strategy
 
 1. Read: Cache aside
