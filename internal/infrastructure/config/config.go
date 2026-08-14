@@ -7,6 +7,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	ConfigFile = "config.yaml"
+)
+
 type DatabaseConfig struct {
 	DSN string `mapstructure:"dsn"`
 }
