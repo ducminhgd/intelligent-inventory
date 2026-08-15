@@ -9,7 +9,7 @@ import (
 )
 
 type GetManufacturerRequest struct {
-	ID uint32 `json:"id" binding:"required"`
+	ID uint32 `json:"id"`
 }
 
 type GetManufacturerResponse struct {

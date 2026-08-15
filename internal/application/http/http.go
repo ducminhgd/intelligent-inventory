@@ -19,8 +19,8 @@ type ListResponse struct {
 }
 
 type ListRequest struct {
-	Page     int `json:"page" binding:"required"`
-	PageSize int `json:"page_size" binding:"required"`
+	Page     int `json:"page"`
+	PageSize int `json:"page_size"`
 
 	CreatedAt_Gte *string `json:"created_at_gte" form:"created_at_gte"`
 	CreatedAt_Lte *string `json:"created_at_lte" form:"created_at_lte"`

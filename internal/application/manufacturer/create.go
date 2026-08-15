@@ -7,7 +7,7 @@ import (
 )
 
 type CreateManufacturerRequest struct {
-	Name string `json:"name" binding:"required"`
+	Name string `json:"name"`
 
 	CreatedBy uuid.UUID `json:"created_by"`
 }

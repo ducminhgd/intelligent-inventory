@@ -17,16 +17,25 @@ func NewManufacturerRepository(db *gorm.DB) *ManufacturerRepository {
 }
 
 func (r *ManufacturerRepository) Create(ctx context.Context, manufacturer *domain.Manufacturer) error {
-	err := r.db.Select("name").Create(&manufacturer).Error
-	if err != nil {
+	model := ManufacturerModel{
+		Name: manufacturer.Name,
+		PostgresModel: PostgresModel{
+			CreatedBy: manufacturer.CreatedBy,
+		},
+	}
+	if err := r.db.WithContext(ctx).Create(&model).Error; err != nil {
 		return err
 	}
+
+	manufacturer.ID = model.ID
+	manufacturer.CreatedAt = model.CreatedAt
+	manufacturer.UpdatedAt = model.UpdatedAt
 	return nil
 }
 
 func (r *ManufacturerRepository) GetByID(ctx context.Context, id uint32) (*domain.Manufacturer, error) {
 	var manufacturer domain.Manufacturer
-	err := r.db.First(&manufacturer, id).Error
+	err := r.db.WithContext(ctx).First(&manufacturer, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -35,11 +44,11 @@ func (r *ManufacturerRepository) GetByID(ctx context.Context, id uint32) (*domai
 
 func (r *ManufacturerRepository) Update(ctx context.Context, manufacturer *domain.Manufacturer) error {
 	var m ManufacturerModel
-	err := r.db.First(&m, manufacturer.ID).Error
+	err := r.db.WithContext(ctx).First(&m, manufacturer.ID).Error
 	if err != nil {
 		return err
 	}
-	err = r.db.Model(&m).Updates(ManufacturerModel{
+	err = r.db.WithContext(ctx).Model(&m).Updates(ManufacturerModel{
 		Name: manufacturer.Name,
 		PostgresModel: PostgresModel{
 			UpdatedAt: manufacturer.UpdatedAt,
@@ -54,11 +63,11 @@ func (r *ManufacturerRepository) Update(ctx context.Context, manufacturer *domai
 
 func (r *ManufacturerRepository) Delete(ctx context.Context, manufacturer *domain.Manufacturer) error {
 	var m ManufacturerModel
-	err := r.db.First(&m, manufacturer.ID).Error
+	err := r.db.WithContext(ctx).First(&m, manufacturer.ID).Error
 	if err != nil {
 		return err
 	}
-	err = r.db.Model(&m).Updates(ManufacturerModel{
+	err = r.db.WithContext(ctx).Model(&m).Updates(ManufacturerModel{
 		Name: manufacturer.Name,
 		PostgresModel: PostgresModel{
 			DeletedAt: manufacturer.DeletedAt,
@@ -73,7 +82,7 @@ func (r *ManufacturerRepository) Delete(ctx context.Context, manufacturer *domai
 
 func (r *ManufacturerRepository) List(ctx context.Context, filter port.ManufacturerFilter) ([]*domain.Manufacturer, error) {
 	var manufacturers []*domain.Manufacturer
-	query := r.db
+	query := r.db.WithContext(ctx)
 
 	if len(filter.ID_In) > 0 {
 		query = query.Where("id IN ?", filter.ID_In)
