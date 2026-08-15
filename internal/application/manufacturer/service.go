@@ -2,6 +2,7 @@ package manufacturer
 
 import (
 	"context"
+	"time"
 
 	"github.com/ducminhgd/intelligent-inventory/internal/application/http"
 	"github.com/ducminhgd/intelligent-inventory/internal/application/port"
@@ -18,7 +19,8 @@ func NewManufacturerService(repo port.ManufacturerRepository) *ManufacturerServi
 
 func (s *ManufacturerService) Create(ctx context.Context, req CreateManufacturerRequest) (CreateManufacturerResponse, error) {
 	manufacturer := &domain.Manufacturer{
-		Name: req.Name,
+		Name:      req.Name,
+		CreatedBy: req.CreatedBy,
 	}
 
 	err := s.repo.Create(ctx, manufacturer)
@@ -50,11 +52,18 @@ func (s *ManufacturerService) GetByID(ctx context.Context, req GetManufacturerRe
 
 func (s *ManufacturerService) Update(ctx context.Context, req UpdateManufacturerRequest) (UpdateManufacturerResponse, error) {
 	manufacturer := &domain.Manufacturer{
-		ID:   req.ID,
-		Name: req.Name,
+		ID:        req.ID,
+		Name:      req.Name,
+		UpdatedBy: req.UpdatedBy,
+		UpdatedAt: time.Now(),
 	}
 
 	err := s.repo.Update(ctx, manufacturer)
+	if err != nil {
+		return UpdateManufacturerResponse{}, err
+	}
+
+	manufacturer, err = s.repo.GetByID(ctx, req.ID)
 	if err != nil {
 		return UpdateManufacturerResponse{}, err
 	}
@@ -94,7 +103,13 @@ func (s *ManufacturerService) List(ctx context.Context, req ListManufacturerRequ
 }
 
 func (s *ManufacturerService) Delete(ctx context.Context, req DeleteManufacturerRequest) (DeleteManufacturerResponse, error) {
-	err := s.repo.Delete(ctx, req.ID)
+	now := time.Now()
+	manufacturer := &domain.Manufacturer{
+		ID:        req.ID,
+		DeletedBy: &req.DeletedBy,
+		DeletedAt: &now,
+	}
+	err := s.repo.Delete(ctx, manufacturer)
 	if err != nil {
 		return DeleteManufacturerResponse{}, err
 	}

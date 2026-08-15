@@ -32,6 +32,6 @@ type ManufacturerRepository interface {
 	Create(ctx context.Context, manufacturer *domain.Manufacturer) error
 	GetByID(ctx context.Context, id uint32) (*domain.Manufacturer, error)
 	Update(ctx context.Context, manufacturer *domain.Manufacturer) error
-	Delete(ctx context.Context, id uint32) error
+	Delete(ctx context.Context, manufacturer *domain.Manufacturer) error
 	List(ctx context.Context, query ManufacturerFilter) ([]*domain.Manufacturer, error)
 }

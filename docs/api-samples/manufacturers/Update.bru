@@ -1,0 +1,17 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{API_BASE_URL}}/manufacturers/4
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Volvo 4"
+  }
+}

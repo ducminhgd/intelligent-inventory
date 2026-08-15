@@ -34,20 +34,37 @@ func (r *ManufacturerRepository) GetByID(ctx context.Context, id uint32) (*domai
 }
 
 func (r *ManufacturerRepository) Update(ctx context.Context, manufacturer *domain.Manufacturer) error {
-	err := r.db.Save(&manufacturer).Error
+	var m ManufacturerModel
+	err := r.db.First(&m, manufacturer.ID).Error
+	if err != nil {
+		return err
+	}
+	err = r.db.Model(&m).Updates(ManufacturerModel{
+		Name: manufacturer.Name,
+		PostgresModel: PostgresModel{
+			UpdatedAt: manufacturer.UpdatedAt,
+			UpdatedBy: manufacturer.UpdatedBy,
+		},
+	}).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *ManufacturerRepository) Delete(ctx context.Context, id uint32) error {
-	var manufacturer domain.Manufacturer
-	err := r.db.First(&manufacturer, id).Error
+func (r *ManufacturerRepository) Delete(ctx context.Context, manufacturer *domain.Manufacturer) error {
+	var m ManufacturerModel
+	err := r.db.First(&m, manufacturer.ID).Error
 	if err != nil {
 		return err
 	}
-	err = r.db.Delete(&manufacturer).Error
+	err = r.db.Model(&m).Updates(ManufacturerModel{
+		Name: manufacturer.Name,
+		PostgresModel: PostgresModel{
+			DeletedAt: manufacturer.DeletedAt,
+			DeletedBy: manufacturer.DeletedBy,
+		},
+	}).Error
 	if err != nil {
 		return err
 	}

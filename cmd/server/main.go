@@ -37,6 +37,11 @@ func main() {
 	if err != nil {
 		apiLogger.Fatal("Failed to initialize database", zap.Error(err))
 	}
+	if cfg.Database.AutoMigrate {
+		if err := db.AutoMigrate(database); err != nil {
+			apiLogger.Fatal("Failed to migrate database", zap.Error(err))
+		}
+	}
 	defer func() {
 		if err := db.CloseDB(database); err != nil {
 			apiLogger.Error("Failed to close database", zap.Error(err))
@@ -63,6 +68,7 @@ func main() {
 		Addr:    cfg.REST.Host + ":" + fmt.Sprintf("%d", cfg.REST.Port),
 		Handler: r,
 	}
+	apiLogger.Info("Starting server", zap.String("host", cfg.REST.Host), zap.Int("port", cfg.REST.Port))
 
 	// Server run context
 	serverCtx, serverStopFunc := context.WithCancel(context.Background())

@@ -8,7 +8,8 @@ import (
 )
 
 type DatabaseConfig struct {
-	DSN string `mapstructure:"dsn" env:"DSN"`
+	DSN         string `mapstructure:"dsn" env:"DSN"`
+	AutoMigrate bool   `mapstructure:"auto_migrate" env:"AUTO_MIGRATE, default=false"`
 }
 
 type RESTConfig struct {

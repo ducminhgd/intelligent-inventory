@@ -1,0 +1,17 @@
+meta {
+  name: Delete
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{API_BASE_URL}}/manufacturers/4
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "deleted_by": "{{$randomUUID}}"
+  }
+}
