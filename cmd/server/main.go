@@ -17,6 +17,7 @@ import (
 	"github.com/ducminhgd/intelligent-inventory/internal/adapter/postgresql"
 	"github.com/ducminhgd/intelligent-inventory/internal/adapter/rest"
 	"github.com/ducminhgd/intelligent-inventory/internal/application/manufacturer"
+	"github.com/ducminhgd/intelligent-inventory/internal/application/model"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/config"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/db"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/logger"
@@ -64,6 +65,11 @@ func main() {
 	manufacturerAPI := rest.NewManufacturerAPI(manufacturerSvc, apiLogger)
 	r.Mount("/", manufacturerAPI.Router())
 
+	modelRepo := postgresql.NewModelRepository(database)
+	modelSvc := model.NewModelService(modelRepo)
+	modelAPI := rest.NewModelAPI(modelSvc, apiLogger)
+	r.Mount("/", modelAPI.Router())
+
 	server := &http.Server{
 		Addr:    cfg.REST.Host + ":" + fmt.Sprintf("%d", cfg.REST.Port),
 		Handler: r,
@@ -79,7 +85,8 @@ func main() {
 		<-sig
 
 		// Shutdown signal with grace period of 30 seconds
-		shutdownCtx, _ := context.WithTimeout(serverCtx, 30*time.Second)
+		shutdownCtx, shutdownCancel := context.WithTimeout(serverCtx, 30*time.Second)
+		defer shutdownCancel()
 
 		go func() {
 			<-shutdownCtx.Done()

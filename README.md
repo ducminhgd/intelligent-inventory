@@ -31,3 +31,9 @@ I list all my steps here, both implementations by me and implementations by AI:
    ```
    As a @.claude/agents/principal-swe.md , /code-review the existing code. Remember that the scope for this project is just an POC.
    ```
+7. **AI** helps to implement the APIs for table `models`:
+
+   ```
+   As @.claude/agents/principal-swe.md , read the @docs/01-database-design.md , implement full flow of APIs for table `models` ,  also implement the sample requests in @docs/api-samples.
+   Remember to set the Model auto migrate.
+   ```
