@@ -16,10 +16,6 @@ type HttpResponse struct {
 
 type ListResponse struct {
 	HttpResponse
-	Page    int         `json:"page"`
-	Limit   int         `json:"limit"`
-	Total   int         `json:"total"`
-	Records interface{} `json:"records"`
 }
 
 type ListRequest struct {

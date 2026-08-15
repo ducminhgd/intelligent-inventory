@@ -95,10 +95,16 @@ func (s *ManufacturerService) List(ctx context.Context, req ListManufacturerRequ
 	}
 
 	return ListManufacturerResponse{
-		HttpResponse: http.HttpResponse{
-			Error: http.ErrorSuccess,
+		ListResponse: http.ListResponse{
+			HttpResponse: http.HttpResponse{
+				Error: http.ErrorSuccess,
+			},
 		},
-		Data: r,
+		Data: ListManufacturerDataResponse{
+			Page:     req.GetPage(),
+			PageSize: req.GetPageSize(),
+			Records:  r,
+		},
 	}, nil
 }
 

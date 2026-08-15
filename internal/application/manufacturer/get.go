@@ -17,9 +17,15 @@ type GetManufacturerResponse struct {
 	Data *domain.Manufacturer `json:"data"`
 }
 
+type ListManufacturerDataResponse struct {
+	Page     int                    `json:"page"`
+	PageSize int                    `json:"page_size"`
+	Records  []*domain.Manufacturer `json:"records"`
+}
+
 type ListManufacturerResponse struct {
-	http.HttpResponse
-	Data []*domain.Manufacturer `json:"data"`
+	http.ListResponse
+	Data ListManufacturerDataResponse `json:"data"`
 }
 
 type ListManufacturerRequest struct {
