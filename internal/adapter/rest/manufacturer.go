@@ -15,7 +15,7 @@ type ManufacturerAPI struct {
 	logger     *zap.Logger
 }
 
-func (api *ManufacturerAPI) RegisterRoutes() http.Handler {
+func (api *ManufacturerAPI) ManufacturerRouter() http.Handler {
 	cr := chi.NewRouter()
 	cr.Get("/manufacturers/{id}", api.Get)
 	return cr
@@ -39,5 +39,7 @@ func (api *ManufacturerAPI) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(output)
+	if err := json.NewEncoder(w).Encode(output); err != nil {
+		api.logger.Error("Failed to encode response", zap.Error(err))
+	}
 }

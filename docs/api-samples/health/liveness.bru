@@ -1,0 +1,11 @@
+meta {
+  name: liveness
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API_BASE_URL}}/heath/liveness
+  body: none
+  auth: inherit
+}

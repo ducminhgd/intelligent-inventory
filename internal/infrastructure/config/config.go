@@ -1,49 +1,36 @@
 package config
 
 import (
+	"context"
 	"fmt"
-	"strings"
 
-	"github.com/spf13/viper"
-)
-
-const (
-	ConfigFile = "config.yaml"
+	"github.com/sethvargo/go-envconfig"
 )
 
 type DatabaseConfig struct {
-	DSN string `mapstructure:"dsn"`
+	DSN string `mapstructure:"dsn" env:"DSN"`
+}
+
+type RESTConfig struct {
+	Host string `mapstructure:"host" env:"HOST, default=0.0.0.0"`
+	Port int    `mapstructure:"port" env:"PORT, default=8080"`
 }
 
 // Config is the top-level application configuration.
 type Config struct {
-	Database DatabaseConfig `mapstructure:"database"`
+	REST RESTConfig `mapstructure:"rest" env:",prefix=REST_"`
+
+	Database DatabaseConfig `mapstructure:"database" env:",prefix=DATABASE_"`
+
+	LogLevel string `mapstructure:"log_level" env:"LOG_LEVEL"`
 }
 
-func Load(configFile string) (*Config, error) {
-	v := viper.NewWithOptions(viper.KeyDelimiter("."))
-	v.SetEnvPrefix("IID")
-	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-
-	if configFile != "" {
-		v.SetConfigFile(configFile)
-		if err := v.ReadInConfig(); err != nil {
-			return nil, fmt.Errorf("read config file %q: %w", configFile, err)
-		}
-	}
-
+func Load() (*Config, error) {
 	var cfg Config
-	if err := v.Unmarshal(&cfg); err != nil {
-		return nil, fmt.Errorf("unmarshal config: %w", err)
+	ctx := context.Background()
+	if err := envconfig.Process(ctx, &cfg); err != nil {
+		return nil, fmt.Errorf("cannot load config: %w", err)
 	}
 
 	return &cfg, nil
-}
-
-func LoadAndValidate(configFile string) (*Config, error) {
-	cfg, err := Load(configFile)
-	if err != nil {
-		return nil, err
-	}
-	return cfg, nil
 }

@@ -8,10 +8,10 @@ import (
 
 func Liveness(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	_, _ = w.Write([]byte("OK"))
 }
 
-func RootRouter() chi.Router {
+func HealthRouter() chi.Router {
 	r := chi.NewRouter()
 	r.Get("/liveness", Liveness)
 	return r
