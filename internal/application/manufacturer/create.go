@@ -12,5 +12,5 @@ type CreateManufacturerRequest struct {
 type CreateManufacturerResponse struct {
 	http.HttpResponse
 
-	Data domain.Manufacturer `json:"data"`
+	Data *domain.Manufacturer `json:"data"`
 }

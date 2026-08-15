@@ -14,7 +14,9 @@ import (
 	"go.uber.org/zap"
 	"moul.io/chizap"
 
+	"github.com/ducminhgd/intelligent-inventory/internal/adapter/postgresql"
 	"github.com/ducminhgd/intelligent-inventory/internal/adapter/rest"
+	"github.com/ducminhgd/intelligent-inventory/internal/application/manufacturer"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/config"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/db"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/logger"
@@ -52,7 +54,10 @@ func main() {
 
 	r.Mount("/health", rest.HealthRouter())
 
-	// Manufacturer API
+	manufacturerRepo := postgresql.NewManufacturerRepository(database)
+	manufacturerSvc := manufacturer.NewManufacturerService(manufacturerRepo)
+	manufacturerAPI := rest.NewManufacturerAPI(manufacturerSvc, apiLogger)
+	r.Mount("/", manufacturerAPI.Router())
 
 	server := &http.Server{
 		Addr:    cfg.REST.Host + ":" + fmt.Sprintf("%d", cfg.REST.Port),

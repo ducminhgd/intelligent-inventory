@@ -12,7 +12,7 @@ type UpdateManufacturerRequest struct {
 
 type UpdateManufacturerResponse struct {
 	http.HttpResponse
-	Data domain.Manufacturer `json:"data"`
+	Data *domain.Manufacturer `json:"data"`
 }
 
 type DeleteManufacturerRequest struct {

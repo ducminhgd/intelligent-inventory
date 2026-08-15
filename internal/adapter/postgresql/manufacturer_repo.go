@@ -3,6 +3,7 @@ package postgresql
 import (
 	"context"
 
+	"github.com/ducminhgd/intelligent-inventory/internal/application/port"
 	"github.com/ducminhgd/intelligent-inventory/internal/domain"
 	"gorm.io/gorm"
 )
@@ -53,9 +54,51 @@ func (r *ManufacturerRepository) Delete(ctx context.Context, id uint32) error {
 	return nil
 }
 
-func (r *ManufacturerRepository) List(ctx context.Context) ([]*domain.Manufacturer, error) {
+func (r *ManufacturerRepository) List(ctx context.Context, filter port.ManufacturerFilter) ([]*domain.Manufacturer, error) {
 	var manufacturers []*domain.Manufacturer
-	err := r.db.Find(&manufacturers).Error
+	query := r.db
+
+	if len(filter.ID_In) > 0 {
+		query = query.Where("id IN ?", filter.ID_In)
+	}
+
+	if filter.Name_iLike != "" {
+		query = query.Where("name ILIKE ?", "%"+filter.Name_iLike+"%")
+	}
+
+	if filter.CreatedAt_Gte != nil {
+		query = query.Where("created_at >= ?", filter.CreatedAt_Gte)
+	}
+	if filter.CreatedAt_Lte != nil {
+		query = query.Where("created_at <= ?", filter.CreatedAt_Lte)
+	}
+	if filter.CreatedBy != nil {
+		query = query.Where("created_by = ?", *filter.CreatedBy)
+	}
+
+	if filter.UpdatedAt_Gte != nil {
+		query = query.Where("updated_at >= ?", filter.UpdatedAt_Gte)
+	}
+	if filter.UpdatedAt_Lte != nil {
+		query = query.Where("updated_at <= ?", filter.UpdatedAt_Lte)
+	}
+	if filter.UpdatedBy != nil {
+		query = query.Where("updated_by = ?", *filter.UpdatedBy)
+	}
+
+	if filter.DeletedAt_Gte != nil {
+		query = query.Where("deleted_at >= ?", filter.DeletedAt_Gte)
+	}
+	if filter.DeletedAt_Lte != nil {
+		query = query.Where("deleted_at <= ?", filter.DeletedAt_Lte)
+	}
+	if filter.DeletedBy != nil {
+		query = query.Where("deleted_by = ?", *filter.DeletedBy)
+	}
+
+	err := query.Limit(filter.Limit).
+		Offset(filter.Offset).
+		Find(&manufacturers).Error
 	if err != nil {
 		return nil, err
 	}
