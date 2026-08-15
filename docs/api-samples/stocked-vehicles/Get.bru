@@ -1,0 +1,11 @@
+meta {
+  name: Get
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{API_BASE_URL}}/stocked-vehicles/{{STOCKED_VEHICLE_ID}}
+  body: none
+  auth: inherit
+}

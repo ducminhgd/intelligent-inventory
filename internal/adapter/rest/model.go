@@ -24,11 +24,11 @@ func NewModelAPI(svc *model.ModelService, logger *zap.Logger) *ModelAPI {
 
 func (api *ModelAPI) Router() http.Handler {
 	cr := chi.NewRouter()
-	cr.Get("/models/{id}", api.Get)
-	cr.Get("/models", api.List)
-	cr.Post("/models", api.Create)
-	cr.Put("/models/{id}", api.Update)
-	cr.Delete("/models/{id}", api.Delete)
+	cr.Get("/", api.List)
+	cr.Post("/", api.Create)
+	cr.Get("/{id}", api.Get)
+	cr.Put("/{id}", api.Update)
+	cr.Delete("/{id}", api.Delete)
 	return cr
 }
 

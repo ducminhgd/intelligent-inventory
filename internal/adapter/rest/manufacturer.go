@@ -24,11 +24,11 @@ func NewManufacturerAPI(svc *manufacturer.ManufacturerService, logger *zap.Logge
 
 func (api *ManufacturerAPI) Router() http.Handler {
 	cr := chi.NewRouter()
-	cr.Get("/manufacturers/{id}", api.Get)
-	cr.Get("/manufacturers", api.List)
-	cr.Post("/manufacturers", api.Create)
-	cr.Put("/manufacturers/{id}", api.Update)
-	cr.Delete("/manufacturers/{id}", api.Delete)
+	cr.Get("/", api.List)
+	cr.Post("/", api.Create)
+	cr.Get("/{id}", api.Get)
+	cr.Put("/{id}", api.Update)
+	cr.Delete("/{id}", api.Delete)
 	return cr
 }
 

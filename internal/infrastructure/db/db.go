@@ -23,6 +23,7 @@ func AutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(
 		&postgresql.ManufacturerModel{},
 		&postgresql.ModelModel{},
+		&postgresql.StockedVehicleModel{},
 	)
 }
 

@@ -18,6 +18,7 @@ import (
 	"github.com/ducminhgd/intelligent-inventory/internal/adapter/rest"
 	"github.com/ducminhgd/intelligent-inventory/internal/application/manufacturer"
 	"github.com/ducminhgd/intelligent-inventory/internal/application/model"
+	"github.com/ducminhgd/intelligent-inventory/internal/application/stockedvehicle"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/config"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/db"
 	"github.com/ducminhgd/intelligent-inventory/internal/infrastructure/logger"
@@ -63,12 +64,17 @@ func main() {
 	manufacturerRepo := postgresql.NewManufacturerRepository(database)
 	manufacturerSvc := manufacturer.NewManufacturerService(manufacturerRepo)
 	manufacturerAPI := rest.NewManufacturerAPI(manufacturerSvc, apiLogger)
-	r.Mount("/", manufacturerAPI.Router())
+	r.Mount("/manufacturers", manufacturerAPI.Router())
 
 	modelRepo := postgresql.NewModelRepository(database)
 	modelSvc := model.NewModelService(modelRepo)
 	modelAPI := rest.NewModelAPI(modelSvc, apiLogger)
-	r.Mount("/", modelAPI.Router())
+	r.Mount("/models", modelAPI.Router())
+
+	stockedVehicleRepo := postgresql.NewStockedVehicleRepository(database)
+	stockedVehicleSvc := stockedvehicle.NewStockedVehicleService(stockedVehicleRepo)
+	stockedVehicleAPI := rest.NewStockedVehicleAPI(stockedVehicleSvc, apiLogger)
+	r.Mount("/stocked-vehicles", stockedVehicleAPI.Router())
 
 	server := &http.Server{
 		Addr:    cfg.REST.Host + ":" + fmt.Sprintf("%d", cfg.REST.Port),
