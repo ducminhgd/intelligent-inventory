@@ -2,6 +2,10 @@
 
 This repository is the submission for one of four challenges for Keyloop's Engineering Team Lead.
 
+Because this is an PoC, so I don't:
+1. Implement Unit tests.
+2. Implement CI workflows.
+
 ## Detail requirements
 
 1. Domain: Supply
