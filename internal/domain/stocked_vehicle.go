@@ -38,6 +38,10 @@ type StockedVehicle struct {
 
 	Action VehicleAction `json:"action"`
 
+	// AgingDay is the number of days the vehicle has been in stock, computed in
+	// the database as CURRENT_DATE - created_at. It is derived, not persisted.
+	AgingDay int `json:"aging_day" gorm:"->;-:migration"`
+
 	CreatedAt time.Time `json:"created_at"`
 	CreatedBy uuid.UUID `json:"created_by"`
 

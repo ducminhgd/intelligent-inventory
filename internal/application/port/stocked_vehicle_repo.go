@@ -16,6 +16,11 @@ type StockedVehicleFilter struct {
 
 	Name_iLike string
 
+	Action_In []domain.VehicleAction
+
+	AgingDay_Gte *int
+	AgingDay_Lte *int
+
 	CreatedAt_Gte *time.Time
 	CreatedAt_Lte *time.Time
 	CreatedBy     *string

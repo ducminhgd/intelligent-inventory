@@ -38,6 +38,11 @@ type ListStockedVehicleRequest struct {
 	VIN string `json:"vin" form:"vin"`
 
 	Name_iLike string `json:"name_ilike" form:"name_ilike"`
+
+	Action_In []domain.VehicleAction `json:"action_in" form:"action_in"`
+
+	AgingDay_Gte *int `json:"aging_day_gte" form:"aging_day_gte"`
+	AgingDay_Lte *int `json:"aging_day_lte" form:"aging_day_lte"`
 }
 
 func (r *ListStockedVehicleRequest) FromQueryParams(values url.Values) {
@@ -65,6 +70,19 @@ func (r *ListStockedVehicleRequest) FromQueryParams(values url.Values) {
 	for _, v := range values["model_id_in"] {
 		if id, err := strconv.ParseUint(v, 10, 32); err == nil {
 			r.ModelID_In = append(r.ModelID_In, uint32(id))
+		}
+	}
+	for _, v := range values["action_in"] {
+		r.Action_In = append(r.Action_In, domain.VehicleAction(v))
+	}
+	if v := values.Get("aging_day_gte"); v != "" {
+		if n, err := strconv.Atoi(v); err == nil {
+			r.AgingDay_Gte = &n
+		}
+	}
+	if v := values.Get("aging_day_lte"); v != "" {
+		if n, err := strconv.Atoi(v); err == nil {
+			r.AgingDay_Lte = &n
 		}
 	}
 }

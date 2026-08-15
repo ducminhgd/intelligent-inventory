@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{API_BASE_URL}}/stocked-vehicles
+  url: {{API_BASE_URL}}/stocked-vehicles?aging_day_gte=1
   body: none
   auth: inherit
+}
+
+params:query {
+  aging_day_gte: 1
 }

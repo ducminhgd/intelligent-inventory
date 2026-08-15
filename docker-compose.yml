@@ -21,6 +21,22 @@ services:
       retries: 5
       start_period: 80s
 
+  app:
+    build: .
+    container_name: inventory-app
+    restart: on-failure
+    networks:
+      - mybridge
+    environment:
+      DATABASE_DSN: "postgres://postgres_user:postgres_pw@postgresql:5432/inventory_db?sslmode=disable"
+      DATABASE_AUTO_MIGRATE: "true"
+      LOG_LEVEL: debug
+    ports:
+      - 8080:8080
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
 volumes:
   postgresql_data:
     driver: local

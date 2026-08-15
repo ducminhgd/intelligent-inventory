@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.env.sample
+.claude
+.vscode
+docs
+docker-compose.yml
+Dockerfile
+.dockerignore
+README.md

@@ -107,6 +107,12 @@ func (s *StockedVehicleService) List(ctx context.Context, req ListStockedVehicle
 	if req.Name_iLike != "" {
 		filter.Name_iLike = req.Name_iLike
 	}
+
+	if len(req.Action_In) > 0 {
+		filter.Action_In = req.Action_In
+	}
+	filter.AgingDay_Gte = req.AgingDay_Gte
+	filter.AgingDay_Lte = req.AgingDay_Lte
 	filter.Limit = req.GetPageSize()
 	filter.Offset = req.GetOffset()
 

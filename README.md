@@ -37,3 +37,15 @@ I list all my steps here, both implementations by me and implementations by AI:
    As @.claude/agents/principal-swe.md , read the @docs/01-database-design.md , implement full flow of APIs for table `models` ,  also implement the sample requests in @docs/api-samples.
    Remember to set the Model auto migrate.
    ```
+
+8. **AI** helps to implement the APIs for the table `stocked_vehicles`:
+
+   ```
+   Continue, do the same flow to table `stocked_vehicles`.
+   ```
+
+9. **AI** implements the Aging Day:
+
+   ```
+   For AgingDay, we select it from the database, it is an additional field in SELECT claude, calculated the day diff with the created_at. Add a filter fr aging day in List functions.
+   ```

@@ -8,6 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
+// agingDayExpr computes the number of whole days a vehicle has been in stock,
+// based on created_at (the stock-in date).
+const agingDayExpr = "(CURRENT_DATE - created_at::date)"
+
 type StockedVehicleRepository struct {
 	db *gorm.DB
 }
@@ -39,7 +43,9 @@ func (r *StockedVehicleRepository) Create(ctx context.Context, vehicle *domain.S
 
 func (r *StockedVehicleRepository) GetByID(ctx context.Context, id uint32) (*domain.StockedVehicle, error) {
 	var vehicle domain.StockedVehicle
-	err := r.db.WithContext(ctx).First(&vehicle, id).Error
+	err := r.db.WithContext(ctx).
+		Select("stocked_vehicles.*, "+agingDayExpr+" AS aging_day").
+		First(&vehicle, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +95,8 @@ func (r *StockedVehicleRepository) Delete(ctx context.Context, vehicle *domain.S
 
 func (r *StockedVehicleRepository) List(ctx context.Context, filter port.StockedVehicleFilter) ([]*domain.StockedVehicle, error) {
 	var vehicles []*domain.StockedVehicle
-	query := r.db.WithContext(ctx)
+	query := r.db.WithContext(ctx).
+		Select("stocked_vehicles.*, " + agingDayExpr + " AS aging_day")
 
 	if len(filter.ID_In) > 0 {
 		query = query.Where("id IN ?", filter.ID_In)
@@ -105,6 +112,17 @@ func (r *StockedVehicleRepository) List(ctx context.Context, filter port.Stocked
 
 	if filter.Name_iLike != "" {
 		query = query.Where("name ILIKE ?", "%"+filter.Name_iLike+"%")
+	}
+
+	if len(filter.Action_In) > 0 {
+		query = query.Where("action IN ?", filter.Action_In)
+	}
+
+	if filter.AgingDay_Gte != nil {
+		query = query.Where(agingDayExpr+" >= ?", *filter.AgingDay_Gte)
+	}
+	if filter.AgingDay_Lte != nil {
+		query = query.Where(agingDayExpr+" <= ?", *filter.AgingDay_Lte)
 	}
 
 	if filter.CreatedAt_Gte != nil {
