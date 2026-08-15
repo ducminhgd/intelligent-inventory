@@ -1,0 +1,18 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{API_BASE_URL}}/models/{{MODEL_ID}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "manufacturer_id": 1,
+    "name": "Accord"
+  }
+}
