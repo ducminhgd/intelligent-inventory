@@ -11,8 +11,8 @@ type CreateStockedVehicleRequest struct {
 
 	ModelID uint32 `json:"model_id"`
 
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
+	Name  string       `json:"name"`
+	Price domain.Price `json:"price"`
 
 	Action domain.VehicleAction `json:"action"`
 

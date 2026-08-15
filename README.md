@@ -53,3 +53,5 @@ I list all my steps here, both implementations by me and implementations by AI:
    ```
    For AgingDay, we select it from the database, it is an additional field in SELECT claude, calculated the day diff with the created_at. Add a filter fr aging day in List functions.
    ```
+
+10. Finally, I have AugmentCode as my code reviewer: Pull request #3

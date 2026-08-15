@@ -25,7 +25,7 @@ func (r *StockedVehicleRepository) Create(ctx context.Context, vehicle *domain.S
 		VIN:     vehicle.VIN,
 		ModelID: vehicle.ModelID,
 		Name:    vehicle.Name,
-		Price:   vehicle.Price,
+		Price:   float64(vehicle.Price),
 		Action:  string(vehicle.Action),
 		PostgresModel: PostgresModel{
 			CreatedBy: vehicle.CreatedBy,
@@ -62,7 +62,7 @@ func (r *StockedVehicleRepository) Update(ctx context.Context, vehicle *domain.S
 		VIN:     vehicle.VIN,
 		ModelID: vehicle.ModelID,
 		Name:    vehicle.Name,
-		Price:   vehicle.Price,
+		Price:   float64(vehicle.Price),
 		Action:  string(vehicle.Action),
 		PostgresModel: PostgresModel{
 			UpdatedAt: vehicle.UpdatedAt,
