@@ -13,7 +13,15 @@ This repository is the submission for one of four challenges for Keyloop's Engin
 
 ## AI Usages
 
+Client: Claude Code
+LLM: Deepseek
+
 I list all my steps here, both implementations by me and implementations by AI:
 1. **I** created ![architectural design](./docs/00-architectural-design.md) and ![database design document](./docs/01-database-design.md)
 2. **I** created ![AI Stack](./.claude)
 3. **I** init the project with Go
+4. **AI** verifies the docs with this init prompt:
+
+   ```
+   This project is just a POC, as a @"principal-swe (agent)", you read "## Detail requirements" in @README.md and verify what I designed in @docs/00-architectural-design.md and @docs/01-database-design.md, use /grill-me to discuss with me. After all, store the conversations in @docs/ai-logs/00-verify-docs.md
+   ```
